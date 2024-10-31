@@ -3,6 +3,11 @@
   "displayName": "ckvs",
   "description": "rich text editor for local files using ckeditor",
   "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medmor/ckvs.git"
+  },
   "engines": {
     "vscode": "^1.95.0"
   },
