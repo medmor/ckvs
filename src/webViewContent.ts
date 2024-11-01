@@ -18,7 +18,6 @@ export function getWebviewContent(
     </head>
     <body>
       <textarea id="editor">${content}</textarea>
-      <button id="save">Save</button>
 
       <script src="${bundleJsPath}"></script>
     </body>

@@ -69,7 +69,10 @@ import {
   Undo,
 } from "ckeditor5";
 
+import SaveButtonPlugin from "./SaveButtonPlugin";
+
 let editorInstance;
+const vscode = acquireVsCodeApi();
 
 const editorConfig = {
   toolbar: {
@@ -114,6 +117,8 @@ const editorConfig = {
       "todoList",
       "outdent",
       "indent",
+      "|",
+      "saveButton",
     ],
     shouldNotGroupWhenFull: true,
   },
@@ -184,6 +189,7 @@ const editorConfig = {
     TodoList,
     Underline,
     Undo,
+    SaveButtonPlugin,
   ],
   blockToolbar: [
     "fontSize",
@@ -357,6 +363,7 @@ const editorConfig = {
       "tableCellProperties",
     ],
   },
+  vscode,
 };
 
 ClassicEditor.create(document.querySelector("#editor"), editorConfig)
@@ -365,17 +372,9 @@ ClassicEditor.create(document.querySelector("#editor"), editorConfig)
   })
   .catch((error) => console.error(error));
 
-// Function to send a save message to the extension
-const vscode = acquireVsCodeApi();
-document.getElementById("save").addEventListener("click", () => {
-  vscode.postMessage({
-    type: "save",
-    text: editorInstance.getData(), // Get content from CKEditor
-  });
-});
-
 // Listen for content updates from the extension
 window.addEventListener("message", (event) => {
+  console.log("...........................", event.data);
   const message = event.data;
   if (message.type === "updateContent" && editorInstance) {
     editorInstance.setData(message.text); // Update editor content
