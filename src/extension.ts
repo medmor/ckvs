@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { getWebviewContent } from "./webViewContent";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -61,63 +62,6 @@ export function activate(context: vscode.ExtensionContext) {
       }
     )
   );
-}
-
-function getWebviewContent(
-  webview: vscode.Webview,
-  extensionUri: vscode.Uri,
-  content: string
-): string {
-  const ckeditorPath = webview.asWebviewUri(
-    vscode.Uri.joinPath(
-      extensionUri,
-      "node_modules",
-      "@ckeditor",
-      "ckeditor5-build-classic",
-      "build",
-      "ckeditor.js"
-    )
-  );
-
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>Rich Text Editor</title>
-      <script src="${ckeditorPath}"></script>
-    </head>
-    <body>
-      <textarea id="editor">${content}</textarea>
-      <button id="save">Save</button>
-      <script>
-        let editorInstance;
-        ClassicEditor
-          .create(document.querySelector('#editor'))
-          .then(editor => {
-            editorInstance = editor;
-          })
-          .catch(error => console.error(error));
-
-        // Function to send a save message to the extension
-        const vscode = acquireVsCodeApi();
-        document.getElementById('save').addEventListener('click', () => {
-          vscode.postMessage({
-            type: 'save',
-            text: editorInstance.getData() // Get content from CKEditor
-          });
-        });
-
-        // Listen for content updates from the extension
-        window.addEventListener('message', event => {
-          const message = event.data;
-          if (message.type === 'updateContent' && editorInstance) {
-            editorInstance.setData(message.text); // Update editor content
-          }
-        });
-      </script>
-    </body>
-    </html>`;
 }
 
 export function deactivate() {}
