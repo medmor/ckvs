@@ -8,9 +8,6 @@ export function getWebviewContent(
   const bundleJsPath = webview.asWebviewUri(
     vscode.Uri.joinPath(extensionUri, "dist", "bundle.js")
   );
-  const ckeditorCssPath = webview.asWebviewUri(
-    vscode.Uri.joinPath(extensionUri, "dist", "ckeditor5.css")
-  );
 
   return `
     <!DOCTYPE html>
@@ -22,6 +19,8 @@ export function getWebviewContent(
     <body>
       <textarea id="editor">${content}</textarea>
       <button id="save">Save</button>
+
+      <script src="${bundleJsPath}"></script>
     </body>
     </html>`;
 }
